@@ -64,6 +64,101 @@ function updateContactLinks() {
   }
 }
 
+function getBrazilianPhoneDigits(value) {
+  const digits = value.replace(/\D/g, "");
+  return /^55\d{10,11}$/.test(digits) ? digits.slice(2) : digits;
+}
+
+function formatBrazilianPhone(value) {
+  const digits = getBrazilianPhoneDigits(value).slice(0, 11);
+  if (!digits) return "";
+  if (digits.length <= 2) return `(${digits}`;
+
+  const areaCode = digits.slice(0, 2);
+  const subscriber = digits.slice(2);
+  const splitAt = digits.length > 10 ? 5 : 4;
+  const formattedSubscriber = subscriber.length > splitAt
+    ? `${subscriber.slice(0, splitAt)}-${subscriber.slice(splitAt)}`
+    : subscriber;
+
+  return `(${areaCode}) ${formattedSubscriber}`;
+}
+
+function isValidBrazilianPhone(value) {
+  const digits = getBrazilianPhoneDigits(value);
+  return /^(?:1[1-9]|[2-9]\d)(?:[2-9]\d{7}|9\d{8})$/.test(digits);
+}
+
+function setupLeadForm() {
+  const form = document.querySelector("#lead-form");
+  if (!form) return;
+
+  const phoneInput = form.elements.phone;
+  const feedback = document.querySelector("#lead-form-feedback");
+  const fallbackLink = document.querySelector("#lead-whatsapp-fallback");
+
+  phoneInput.addEventListener("input", () => {
+    phoneInput.value = formatBrazilianPhone(phoneInput.value);
+    phoneInput.setCustomValidity("");
+    feedback.hidden = true;
+  });
+
+  form.addEventListener("input", (event) => {
+    if (event.target !== phoneInput) event.target.setCustomValidity("");
+    feedback.hidden = true;
+  });
+  form.addEventListener("change", (event) => {
+    event.target.setCustomValidity("");
+    feedback.hidden = true;
+  });
+  form.addEventListener("invalid", (event) => {
+    const field = event.target;
+    if (field === phoneInput && field.value && !isValidBrazilianPhone(field.value)) {
+      field.setCustomValidity("Informe um WhatsApp válido com DDD, usando 10 ou 11 números.");
+    } else if (field.validity.valueMissing) {
+      const messages = {
+        "lead-name": "Informe seu nome completo.",
+        "lead-phone": "Informe seu WhatsApp com DDD.",
+        "lead-service": "Selecione o serviço desejado."
+      };
+      field.setCustomValidity(messages[field.id] || "Preencha este campo.");
+    }
+  }, true);
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    phoneInput.setCustomValidity(
+      isValidBrazilianPhone(phoneInput.value)
+        ? ""
+        : "Informe um WhatsApp válido com DDD, usando 10 ou 11 números."
+    );
+    if (!form.reportValidity()) return;
+
+    const formData = new FormData(form);
+    const company = String(formData.get("company") || "").trim();
+    const budget = String(formData.get("budget") || "").trim();
+    const description = String(formData.get("description") || "").trim();
+    const message = [
+      "Olá, equipe da RISE MARKETING! Gostaria de solicitar um orçamento.",
+      "",
+      `Nome: ${String(formData.get("name")).trim()}`,
+      `WhatsApp: ${phoneInput.value}`,
+      ...(company ? [`Empresa: ${company}`] : []),
+      `Serviço desejado: ${String(formData.get("service"))}`,
+      ...(budget ? [`Faixa de orçamento: ${budget}`] : []),
+      ...(description ? ["", "Descrição do projeto:", description] : []),
+      "",
+      "Aguardo o contato. Obrigado!"
+    ].join("\n");
+    const businessNumber = RISE_CONFIG.whatsappNumber.replace(/\D/g, "");
+    const whatsappUrl = `https://wa.me/${businessNumber}?text=${encodeURIComponent(message)}`;
+
+    fallbackLink.href = whatsappUrl;
+    feedback.hidden = false;
+    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+  });
+}
+
 function setupMobileMenu() {
   const toggle = document.querySelector(".menu-toggle");
   const navigation = document.querySelector(".site-nav");
@@ -98,6 +193,7 @@ function setupHeader() {
 
 updateWhatsAppLinks();
 updateContactLinks();
+setupLeadForm();
 setupMobileMenu();
 setupHeader();
 document.querySelector("#current-year").textContent = String(new Date().getFullYear());

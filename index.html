@@ -155,9 +155,59 @@
 
     <section class="contact section-pad" id="contato">
       <div class="container contact-grid">
-        <div class="contact-copy"><p class="eyebrow"><span class="eyebrow-dot"></span> Vamos conversar?</p><h2>VAMOS TIRAR<br>SUA IDEIA<br><span>DO PAPEL?</span></h2></div>
-        <div class="contact-details"><p>Conte um pouco sobre o seu negócio e vamos conversar sobre a melhor solução para sua presença digital.</p>
-          <a class="button button-orange contact-button" data-whatsapp="orcamento" href="#contato">Solicitar orçamento pelo WhatsApp <span aria-hidden="true">↗</span></a>
+        <div class="contact-copy"><p class="eyebrow"><span class="eyebrow-dot"></span> Vamos conversar?</p><h2>VAMOS TIRAR<br>SEU PROJETO<br><span>DO PAPEL?</span></h2></div>
+        <div class="contact-details">
+          <p>Conte um pouco sobre o que você precisa e fale com nossa equipe pelo WhatsApp.</p>
+          <form class="lead-form" id="lead-form">
+            <div class="form-field">
+              <label for="lead-name">Nome completo <span class="required-mark" aria-hidden="true">*</span></label>
+              <input id="lead-name" name="name" type="text" autocomplete="name" required>
+            </div>
+            <div class="form-field">
+              <label for="lead-phone">WhatsApp <span class="required-mark" aria-hidden="true">*</span></label>
+              <input id="lead-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="(41) 99999-9999" maxlength="20" aria-describedby="lead-phone-help" required>
+              <span class="form-help" id="lead-phone-help">Com DDD. Ex.: (41) 99999-9999</span>
+            </div>
+            <div class="form-field form-field-full">
+              <label for="lead-service">Serviço desejado <span class="required-mark" aria-hidden="true">*</span></label>
+              <select id="lead-service" name="service" required>
+                <option value="" selected disabled>Selecione um serviço</option>
+                <option>Criação de site</option>
+                <option>Loja virtual / E-commerce</option>
+                <option>Sistemas e soluções personalizadas</option>
+                <option>Gestão de tráfego pago</option>
+                <option>Design e artes para redes sociais</option>
+                <option>Edição e produção de vídeos</option>
+                <option>Outro serviço</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="lead-company">Nome da empresa <span class="form-optional">(opcional)</span></label>
+              <input id="lead-company" name="company" type="text" autocomplete="organization">
+            </div>
+            <div class="form-field">
+              <label for="lead-budget">Faixa de orçamento <span class="form-optional">(opcional)</span></label>
+              <select id="lead-budget" name="budget">
+                <option value="" selected>Selecione uma faixa</option>
+                <option>Ainda não defini</option>
+                <option>Até R$ 500</option>
+                <option>R$ 500 a R$ 1.000</option>
+                <option>R$ 1.000 a R$ 2.500</option>
+                <option>R$ 2.500 a R$ 5.000</option>
+                <option>Acima de R$ 5.000</option>
+              </select>
+            </div>
+            <div class="form-field form-field-full">
+              <label for="lead-description">Descrição do projeto <span class="form-optional">(opcional)</span></label>
+              <textarea id="lead-description" name="description" rows="4" placeholder="Conte um pouco sobre sua ideia, seus objetivos ou o que você precisa."></textarea>
+            </div>
+            <button class="button button-orange contact-button form-submit" type="submit">Solicitar orçamento pelo WhatsApp <span aria-hidden="true">↗</span></button>
+            <p class="privacy-note">Seus dados serão incluídos na mensagem para a equipe da RISE. Nada é enviado até você revisar e enviar a mensagem pelo WhatsApp.</p>
+            <div class="form-feedback" id="lead-form-feedback" role="status" aria-live="polite" hidden>
+              <span>O WhatsApp deve abrir em uma nova aba. Revise a mensagem e envie por lá.</span>
+              <a id="lead-whatsapp-fallback" href="#" target="_blank" rel="noopener noreferrer">Se não abrir, clique aqui para continuar.</a>
+            </div>
+          </form>
           <div class="contact-links">
             <a class="config-link" data-config="instagram" href="#contato"><span>Instagram</span><span class="config-value">Link em configuração</span></a>
             <div class="config-link phone-contact" data-config="phone" hidden>
